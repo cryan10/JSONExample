@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Our superheroes</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+
+    </header>
+
+    <section>
+
+    </section>
+
+    <script>
+        var header = document.querySelector('header');
+        var section = document.querySelector('section');
+
+
+        //Where we are making a request to
+        var requestURL = 'https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json';
+        //establishes a XML HTTP Request
+        var request = new XMLHttpRequest();
+        //initializes grabbing the data from the GitHub URL
+        request.open('GET', requestURL);
+        //Make the data type JSON
+        request.responseType = 'json';
+        //Send the request for the data to GitHub URL
+        request.send();
+
+
+
+        //What do to once we get the data from GitHub
+        //We use onload because it's called when an XMLHttpRequest successfully happens
+        request.onload = function () {
+            //store the data/object in a variable
+            var superHeroes = request.response;
+
+            //Do stuff with the data
+            populateHeader(superHeroes);
+            showHeroes(superHeroes);
+        }
+
+
+        //Here are the functions we just mentioned...
+
+
+        function populateHeader(jsonObj) {
+            //Create a variable for a heading for the page
+            var myH1 = document.createElement('h1');
+            //Store the part in the JSON object called squad name in the variable.
+            //Convert it from a JSON object to string
+            myH1.textContent = jsonObj['squadName'];
+            //Display the the squad name in the header?
+            header.appendChild(myH1);
+
+            //Create a variable for p tags on the page
+            var myPara = document.createElement('p');
+            //Grab more data from the JSON object and cpnvert/store it in myPara as a string
+            myPara.textContent = 'Hometown: ' + jsonObj['homeTown'] + ' // Formed: ' + jsonObj['formed'];
+            //display this info on the page in the header section
+            header.appendChild(myPara);
+        }
+
+        function showHeroes(jsonObj) {
+            //Store member data in variable
+            var heroes = jsonObj['members'];
+
+            //Loop through all of the superhero members in the JSON object
+            for (var i = 0; i < heroes.length; i++) {
+                //create places on the html document to store each piece of data on the specific superhero
+                var myArticle = document.createElement('article');
+                var myH2 = document.createElement('h2');
+                var myPara1 = document.createElement('p');
+                var myPara2 = document.createElement('p');
+                var myPara3 = document.createElement('p');
+                var myList = document.createElement('ul');
+
+                //move data from JSON object for each superhero into the appropriate HTML element.
+                //Conversion from JSON
+                myH2.textContent = heroes[i].name;
+                myPara1.textContent = 'Secret identity: ' + heroes[i].secretIdentity;
+                myPara2.textContent = 'Age: ' + heroes[i].age;
+                myPara3.textContent = 'Superpowers:';
+
+                //each superhero must have multiple super powers. This code takes the super powers puts them in a list on the page.
+                var superPowers = heroes[i].powers;
+                //for each superhero's super power, put them in a list element and display them on the page.
+                for (var j = 0; j < superPowers.length; j++) {
+                    var listItem = document.createElement('li');
+                    //Conversion from JSON
+                    listItem.textContent = superPowers[j];
+                    myList.appendChild(listItem);
+                }
+
+                //display the superhero info placed in the variables above in the appropriate HTML elements.
+                myArticle.appendChild(myH2);
+                myArticle.appendChild(myPara1);
+                myArticle.appendChild(myPara2);
+                myArticle.appendChild(myPara3);
+                myArticle.appendChild(myList);
+
+                //display all of this information in an article element of the page
+                section.appendChild(myArticle);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
